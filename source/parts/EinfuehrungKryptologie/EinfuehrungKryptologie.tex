@@ -1,0 +1,73 @@
+\chapter{Einführung in die Kryptologie (VL2)}
+\section*{Begriffe}
+\begin{itemize}
+  \item Kryptografie: Erstellung von kryptografischen Verfahren.
+  \item Kryptoanalyse: Analyse kryptografischer Verfahren.
+  \item Kryptologie: Sammelbegriff für Kryptografie \& Kryptoanalyse.
+\end{itemize}
+
+\section*{Schutzziele:}
+\begin{itemize}
+  \item Vertrauligkeit/Geheimhaltung
+  \item Integrität (Schutz vor unentdeckter Manipulation)
+  \item Authentifizierung/Authentizität
+  \item Verbindlichkeit (Kausalkette zum Urheber)
+  \item Anonymität/Pseudonymität
+\end{itemize}
+
+\section{Symmetrische Kryptosysteme (1.4)}
+Key $K \in \{0,1\}^k$ \\
+Plaintext $P \in \{0,1\}^*$ \\
+Cyphertext $C \in \{0,1\}^*$ \\
+
+encrypt:\\
+\begin{math}
+E: \{0.1\}^* \times \{0,1\}^k \mapsto \{0,1\}^* \\
+E: (P, K) \mapsto C \\ 
+\end{math}
+
+decrypt:\\
+$
+D:  \{0,1\}^* \times \{0.1\}^k \mapsto \{0,1\}^* \\
+D:  (C, K) \mapsto P \\ 
+$
+
+$$\forall_{K, P} \textnormal{ gilt } D_K(E_K(P)) = P$$
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[scale=1]{KeyExchange.pdf}
+	\label{KeyEx}
+\end{figure}
+Mit \emph{vertraulichem Austausch} von K können \emph{große Datenmengen} vertraulich übertragen werden. (1.6)
+
+\section{Schlüssellänge vs Effektive Schlüssellänge (1.5)}
+Gesamtlänge des Schlüssels $k$ \\
+Effektive Länge des Schlüssels $k_e = ld(\textnormal{Anzahl verwendbarer Schlüssel})$
+
+\section{Kerckhoffs'sche Prinzip (1.7)}
+Sicherheit Kryptoverfahrens hängt ausschließlich von Geheimhaltung von K ab und nicht von Geheimhaltung des Kryptoverfahrens.
+
+\section{Angriffsklassen (1.9)}
+\begin{itemize}
+  \item \emph{cyphertext only}: Suche nach $P$ oder $K$
+  \item \emph{known plaintext}: Suche nach $K$
+  \item \emph{chosen plaintext}: Suche nach $K$
+  \item wenn Angriffe wiederholt angepasst stattfinden können: \emph{adaptive}
+\end{itemize}
+
+\section{One Time Pad (OTP) (2.3)}
+Verschlüsselung jedes Plaintextbits $Pbit_i$ mit Schlüsselbit $Kbit_i$
+\begin{align*}
+E: Pbit_i \oplus Kbit_i \mapsto Cbit_i \\
+D: Cbit_i \oplus Kbit_i \mapsto Pbit_i \\
+\end{align*}
+sicher wenn:
+\begin{itemize}
+  \item $K$ echt zufällig gewählt
+  \item $Länge(K) \geq Länge(P)$
+  \item Geheimnis $K$ 
+\end{itemize}
+
+
+

@@ -1,0 +1,211 @@
+\chapter{Asymmetrische Kryptographie / Public Key Verfahren}
+\section{Definition (5.2)}
+Public Key $pK$ \\
+Secret Key $sK$ \\
+encrypt: $E: F(P, pK) \mapsto C $ \\
+decrypt: $D: F(C, sK) \mapsto P $ \\
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[scale=1]{AsymKrypto.pdf}
+\end{figure}
+
+\section{Mathematische Aufgaben auf denen asymmetrische Kryptoverfahren basieren (5.3)}
+
+\subsection{Faktorisierung (5.3.1)}
+Maschinell das Produkt zweier Primzahlen zu berechnen ist schnell. \\
+Dagegen ist kein Algorithmus mit polynomieller Bekannt, welcher eine gegebene Zahl in ihre Primfaktoren zerlegt. \\
+Laufzeiten von bekannten Algorithmen zur Primfaktorzerlegung einer Zahl mit $n$-bit:
+\begin{itemize}
+  \item Probedivision $O(2^\frac{n}{2})$
+  \item Quadratisches Sieb $O(exp(n^\frac{1}{2}(ln(n))^\frac{1}{2})$
+  \item Zahlenkörpersieb $O(exp(n^\frac{1}{3}(ln(n))^\frac{2}{3})$
+\end{itemize}
+
+\subsection{Diskreter Logarithmus (5.3.2)}
+\begin{align*}
+a &= g^e \hspace{4pt} mod \hspace{4pt} p \\
+e &= log_g(a) \hspace{4pt} mod \hspace{4pt} p \\
+\end{align*}
+Es existieren Algorithmen $\in O(n^c)$ für ein gegebenes $e$ um die Gleichung $a = g^e \hspace{4pt} mod \hspace{4pt} p$ zu lösen.
+
+Es sind bisher \emph{keine Algorithmen} $\in O(n^c)$ bekannt welche für gegebene $a,g,p$ die Gleichung $e = log_g(a) \hspace{4pt} mod \hspace{4pt} p$ lösen.
+
+Aus Erfahrung wird gesagt, dass das Lösen von Diskreten-Algorithmen-Gleichungen nicht schwerer ist als das Lösen einer Faktorisierungs-Gleichung.
+
+
+\subsection{Quadratwurzel ziehen mod n (5.3.3) ??????}++
+"`Für n=p*q mit p und q Primzahlen gibt es ohne Kenntnis von p und q kein effizientes Verfahren zur Bestimmung der Quadratwurzeln.\\
+Die Äquivalenz zum Faktorisierungsproblem kann bewiesen werden."'
+
+\subsection{Überblick über ausgewählte Asymmetrische Verfahren (5.3.4)}
+\begin{tabular}{*{5}{l}}
+Verfahren & schweres Problem / Falltür & leichtes Problem & Signatur möglich & Einsatz in der Praxis \\
+RSA & Faktorisierung mod n & Multiplizieren/Potenzieren mod n & ja & ja \\
+Rabin & Quadratwurzel ziehen mod n & Quadrieren mod n & nein & nein \\
+Elgamal & Diskreter Logarithmus mod n & Multiplizieren/Potenzieren mod n & ja & ja \\
+\end{tabular}
+
+\section{Mathematische Vorbereitung für RSA (5.4)}
+\subsection{Division mit Rest}
+$$
+\textnormal{ganze Zahl } z \in \mathbb{Z}
+$$
+$$
+ \textnormal{Modul } m \in \mathbb{N}
+$$
+$$
+z = qb + r \textnormal{ mit } qb = \lfloor z : m \rfloor \textnormal{ und } r = z - qb = z \hspace{4pt} mod \hspace{4pt} m 
+$$
+
+\subsection{Modulares Rechnen}
+Es gelten die gewohnten arithmetischen Rechengesetze. Jedes Teilergebnis lässt sich zusätzlich um $ mod \hspace{4pt} m$ reduzieren.
+
+\begin{align*}
+((x \hspace{4pt} mod \hspace{4pt} m) + (y \hspace{4pt} mod \hspace{4pt} m)) \hspace{4pt} mod \hspace{4pt}  m =& (x+y) \hspace{4pt} mod \hspace{4pt} m \\
+((x \hspace{4pt} mod \hspace{4pt} m) \cdot (y \hspace{4pt} mod \hspace{4pt} m)) \hspace{4pt} mod \hspace{4pt}  m =& (x \cdot y) \hspace{4pt} mod \hspace{4pt} m \\
+((z \hspace{4pt} mod \hspace{4pt} m) \cdot ((x \hspace{4pt} mod \hspace{4pt} m) + (y \hspace{4pt} mod \hspace{4pt} m))) \hspace{4pt} mod \hspace{4pt} m =& ((z \hspace{4pt} mod \hspace{4pt} m) \cdot (x \hspace{4pt} mod \hspace{4pt} m) \\
+&+ (z \hspace{4pt} mod \hspace{4pt} m) \cdot (y \hspace{4pt} mod \hspace{4pt} m)) \hspace{4pt} mod \hspace{4pt} m \\ 
+\end{align*}
+
+\subsection{Wiederholtes Quadrieren (5.4.3)}
+um $b^e \hspace{4pt} mod \hspace{4pt} n$ zu berechnen\footnote{http://de.wikipedia.org/wiki/Bin\%C3\%A4re\_Exponentiation}:
+\begin{itemize}
+  \item Schreibe Exponenten $e$ als Dualzahl
+  \item Starte mit Zwischenergebnis $z = 1$
+  \item Arbeite die Stellen vom höchstwertigsten zum niederwertigsten Bitstelle ab.
+  	\begin{itemize}
+  		\item wenn Stelle 0: $z := z^2$
+  		\item wenn Stelle 1: $z := z^2 \cdot b$
+		\end{itemize}
+\end{itemize}
+
+$$\textnormal{Beispiel: } 3^{13} \hspace{4pt} mod \hspace{4pt} 17$$
+$$13_{10} = 1101_2$$
+$$
+\begin{array}{crclc}
+	1 & 1^2 \cdot 3 & = & 3 &  (mod \hspace{4pt} 17) \\
+	1 & 3^2 \cdot 3 & = & 10 &  (mod \hspace{4pt} 17) \\
+	0 & 10^2 & = & -2 &  (mod \hspace{4pt} 17) \\
+	1 & (-2)^2 \cdot 3 & = & 12 &  (mod \hspace{4pt} 17) \\
+\end{array}
+$$
+
+\subsection{Multiplikatives Inverses (5.4.4)}
+Das Multiplikatives Inverse $z^{-1}$ zu $z$ ist definiert über:
+$$z \cdot z^{-1} = 1 \hspace{4pt} (mod \hspace{4pt} m) $$
+
+\subsection{Definition: Primzahl (5.4.5)}
+$p$ ist Primzahl, wenn $p$ außer sich selbst und 1 keine positiven Teiler hat.
+
+\subsection{größter gemeinsamer Teiler (ggT) (5.4.6)}
+Der ggT zweier Zahlen ist die größte Zahl, welche beide Zahlen ohne Rest teilt. \\
+Falls $ggT(a,b) = 1$, so heißen a und b teilerfremd.
+
+\subsection{Erweiterter Euklidischer Algorithmus zur Bestimmung des Multiplikativen Inversen (5.4.7)}
+Wenn eine Zahl $z$ zum Modul $m$ teilerfremd ist, lässt sich ihr Multiplikatives Inverses $z^{-1}$ mit dem Erweiterten Euklidischen Algorithmus bestimmen.\footnote{genaue Erläuterung: "`http://www.yimin-ge.com/doc/multiplikative\_inverse.pdf"'} Der Algorithmus liefert auch Aufschluss über die Teilerfremdheit.
+\begin{enumerate}
+  \item starte mit erster Gleichung der Form $m = 1 \cdot m + 0 \cdot z$ und nachfolgender Gleichung der Form $z = 0 \cdot m + 1 \cdot z$
+  \item Bilde die Folgegleichungen indem von der vorletzten Gleichung ein vielfaches der letzten Gleichung subtrahiert wird, sodass das Ergebnis der linken Seite dem Rest der Division mit Rest entspricht.
+  \item Wiederhole 2. solange bis das Ergebnis der linken Seite 1 oder 0 ist.
+  \begin{itemize}
+    \item Wenn 1: Das Multiplikative Inverse $z^{-1}$ ist der Faktor vor $z$ .
+    \item Wenn 0: Es gibt kein Multiplikatives Inverses von $z$ zum Modul $m$, da $z$ und $m$ nicht teilerfremd sind.
+	\end{itemize}
+\end{enumerate}
+Beispiel: Finde $z^{-1}$ zu $7 \hspace{4pt} (mod \hspace{4pt} 23) $:
+$$
+\begin{array}{crcll}
+I & 23 & = & 1 \cdot 23 + 0 \cdot 7 & \\
+II & 7 & = & 0 \cdot 23 + 1 \cdot 7 & \\
+III & 2 & = & 1 \cdot 23 + (-3) \cdot 7 & I + II \cdot (-3) \\
+IV& 1 & = & (-3) \cdot 23 + 10 \cdot 7 & II + III \cdot (-3) \\
+\end{array}
+$$
+Ergebnis: Das Multiplikative Inverse zu 7 zum Modul 23 ist 10.
+\begin{center}
+\begin{tabular}{*{4}{r}}
+23 & 1 & 0 & \\
+7 & 0 & 1 & -3\\
+2 & 1 & -3 & -3\\
+1 & -3 & \fbox{10} & \\
+\end{tabular}
+\end{center}
+
+\subsection{Eulersche $\varphi$ Funktion (5.4.8)}
+$\varphi$(n) = Anzahl der positiven ganzen Zahlen $z \le n$, mit $ggT(z,n) = 1$ . \\
+Beispiel: $\varphi(21) = 12$ \\
+speziell für Primzahlen $p, q$ : \\
+$\varphi(p) = p-1$ \\
+$\varphi(p \cdot q) = (p-1) \cdot (q-1)$ wobei $p \neq q$ \\
+
+\subsection{Satz von Euler (5.4.9)}
+Falls $ggT(x, n) = 1$, dann gilt  $x^{\varphi(n)} = 1 \hspace{4pt} (mod \hspace{4pt} n) $ 
+
+\section{RSA-Verfahren (5.5)}
+\subsection{Definition des RSA-Verfahrens}
+Der Empfänger bildet \textsc{rsa}-Modul $n$ mit zwei Primzahlen $p$ und $q$:
+
+$$
+	n = p \cdot q
+$$
+
+Öffentliche Exponent $e$ (encrypt) wird gebildet mit:
+
+$$
+	1 < e < (p-1)(q-1) \wedge ggT(e,(p-1)(q-1)) = 1
+$$
+
+Öffentlicher Schlüssel ist das Paar $(n,e)$.
+
+Geheime Exponent $d$ (decrypt) wird gebildet mit:
+
+$$
+	1 < d < (p-1)(q-1) \wedge e \cdot d \hspace{4pt} mod \hspace{3pt} (p-1)(q-1) = 1
+$$
+
+Geheimer Schlüssel ist Tripel $(p,q,d)$.
+
+Hinweis: Die Berechnung von $d$ erolgt $mod \hspace{4pt} \varphi(n)$.
+
+\subsection{RSA-Verschlüsselung und Entschlüsselung}
+Encryption of Plaintext $P$ with $0 \le P < n$:
+$$ C = (P^e) \hspace{4pt} (mod \hspace{4pt} n)  $$
+
+Decryption of Cyphertext $C$:
+$$ P = (C^d) \hspace{4pt} (mod \hspace{4pt} n)  $$
+
+RSA Schlüsselänge ist Anzahl Bits des Moduls $n$.
+
+$ P \mapsto P^e \hspace{4pt} (mod \hspace{4pt} n) $ ist eine Falltürfunktion da:
+Ohne geheimem Schlüssel ist die Funktion praktisch nicht invertierbar. \\
+Mit Kenntnis des geheimen Schlüssel ist die Invertierung einfach.
+
+\subsection{Falltürfunktion (trap door function)}
+ Für ein Geheimnis $S$ ist Funktion $F_S: X \mapsto Y$ eine Falltürfunktion, wenn gilt:
+ \begin{enumerate}
+  \item $\forall x \in X$ ist $F(x)$ leicht berechenbar.
+  \item Ohne Kenntnis des Geheimnisses $S$ ist es für gegebenes $y \in Y$ praktisch nicht möglich ein Urbild $x$ von $y$ unter $F_S$ zu berechnen.
+  \item Mit Kenntnis des Geheimnisses $S$ ist es für gegebenes $y \in Y$ leicht ein Urbild $x$ von $y$ unter $F_S$ zu berechnen. 
+\end{enumerate}
+
+\subsection{Sicherheit des RSA}
+\begin{itemize}
+  \item Aufwand um geheimen Exponenten aus öffentlichem Schlüssel zu berechnen ist äquivalent zur Faktorisierung des RSA-Moduls
+  \item Bislang unbekannt RSA brechbar ohne Modul zu faktorisieren oder geheimen Exponenten $d$ zu finden.
+  \item Der Aufwand zur Faktorisierung des \textsc{rsa}-Moduls hängt von dessen Größe ab.
+\end{itemize}
+
+\subsection{Sichere Auswahl von RSA Parametern}
+\begin{itemize}
+  \item RSA-Schlüsssellänge $\geq$ 1024 Bit.
+  \item Primzahlen $p$ und $q$ sollten zufällig, gleichverteilt gewählt sein.
+  \item wegen "`low exponent attack"' sollte öffentlicher Exponent $e$ nicht zu klein sein: oft wird $e = 2^{16}+1 = 65537$ gewählt.
+\end{itemize}
+
+
+
+
+
+
+

@@ -1,0 +1,28 @@
+\chapter{Digitale Signaturen}
+\section{Anforderungen an Digitale Signaturen (9.1)}
+Eine Digitale Signatur muss:
+\begin{itemize}
+  \item vom Nachrichteninhalt abhängen.
+  \item den Absender eindeutig ausweisen.
+  \item einfach zu erzeugen und zu prüfen sein.
+  \item fälschungssicher sein: Der Empfänger darf keine gültige Signatur vom Sender erzeugen können. Damit kann der Sender nicht mehr leugnen die Signatur angefertigt zu haben.
+  \item einfach gespeichert werden können.
+  \item über einen gewissen Zeitraum beweiskräftig bleiben.
+\end{itemize}
+
+\section{Konstruktion von Digitalen Signaturen (9.2)}
+Digitale Signaturen können mit asymmetrischen Kryptosystemen realisiert werden. Gegeben sei eine kryptografisch sichere Hashfunktion $H$, ein asymmetrisches Kryptosystem $(E,D)$ und dem Schlüsselpaar $(PK,SK)$. Die Entschlüsselungsfunktion $D$ wird als Signaturfunktion $sign$ benutzt. Gültige Signaturen der Nachricht $M$ des Senders sind $sign(SK, M)$ und $sign(SK, H(M))$.
+
+Zur Prüfung wird die Verschlüsselungsfunktion $E$ als Prüffunktion $validate$ genutzt. Eine Prüfung ist genau dann erfolgreich wenn gilt:
+$$
+	validate(PK, sign(M)) = M
+$$
+beziehungsweise:
+$$
+	validate(PK, sign(H(M))) = H(M)
+$$
+
+Dieses Verfahren ist kryptografisch sicher, solange der Secret Key $SK$ des Senders nur dem Sender bekannt ist.
+
+ 
+

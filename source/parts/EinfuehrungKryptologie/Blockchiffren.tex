@@ -1,0 +1,29 @@
+\chapter{Blockchiffren (6)}
+Anwendung: Wenn Plaintext länger als vorgegebene Blocklänge des gewählten Chiffrierverfahrens. \\
+Plaintext wird durch Padding\footnote{Padding engl. Auffüllen} auf eine Länge $k \cdot Blocklänge$ mit $k \in \mathbb{N}$ gebracht. Anschließend wird der Plaintext inklusive Padding in $k$ viele Teile zerlegt.
+$$ P = (P_1, P_2, \ldots, P_k) $$
+
+\section{Electronic Code Book (ECB) Mode}
+Encryption: $E(P_i, K) = C_i$ \\
+Decryption: $D(C_i, K) = P_i$ \\
+Problem: Gleiche Plaintextblöcke ergeben gleiche Chiffretextblöcke! (besonders bei Bilddaten kann dies zu Enthüllungsproblemen führen)
+\begin{figure}[htp]
+	\centering
+	\includegraphics[scale=1]{ECBblockchiffre.pdf}
+	\caption{ECB Mode}
+\end{figure}
+
+\section{Cipher Block Chaining (CBC) Mode}
+Encryption: $ C_0 = Initialisierungsvektor (IV); C_i = E(P_i \oplus C_{i-1}) $ \\
+Decryption: $ P_i = C_{i-1} \oplus D(C_i, K) $ \\
+Gleiche Klartextblöcke ergeben gleiche Chiffretextblöcke. (Bilddaten werden so ebenfalls gut verschlüsselt)
+\begin{figure}[htp]
+	\centering
+	\includegraphics[scale=1]{CBCblockchiffre.pdf}
+	\caption{CBC Mode}
+\end{figure}
+
+
+
+
+

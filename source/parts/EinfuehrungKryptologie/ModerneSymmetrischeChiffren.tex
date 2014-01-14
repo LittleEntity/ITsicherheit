@@ -1,0 +1,97 @@
+\chapter{Moderne symmetrische Chiffren}
+\section{Blockchiffre (3.1)}
+definiert für: \\
+feste Blocklänge $n$ für $P$ und $C$ \\
+feste Schlüssellänge $k$ \\
+Ein Block wird mit $K$ ver- bzw. entschlüsselt.
+
+\section{Stromchiffre (vgl OTP) (3.2)}
+unbegrenzte Folge von $Pbits$ und $Cbits$
+Erzeugung einer unbegrenzten Folge von $Kbits$ aus $K$ mit Pseudozufallszahlengenerator $G$ (verwendet $K$ als Seed).
+$$
+G: \{0,1\}^k \mapsto \{0,1\}^*
+$$
+\begin{align*}
+E: Pbit \oplus Gbit \mapsto Cbit \\
+D: Cbit \oplus Gbit \mapsto Pbit \\
+\end{align*}
+
+\section{Feistel Cipher (3.3)}
+Design-Prinzip für Block-Chiffren um beliebig lange $P$ zu verschlüsseln. \\
+$n$-viele Runden R mit $n$-vielen Schlüsseln $K_i$ und Rundenfunktion $F$
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=1\textwidth]{FeistelCipher.pdf}
+\end{figure}
+
+
+\subsection*{encrypt:}
+\begin{enumerate}
+  \item Teile Plaintext-Block $P$ in $L_0$ und $R_0$ auf (wobei $Länge(L_0) = Länge(R_0)$)
+$$ P = L_0 \circ R_0 $$
+  \item für die Iterationen $i$ gilt:
+
+  \begin{tabular}{rl}
+  	$i:$ & $ L_i = R_{i-1} $ \\
+  	            &  $ R_i = L_{i-1} \oplus F( R_{i-1}, K_i ) $ \\ \hline
+  	$i = 1:$ & $L_1 = R_0$ \\
+  	            &  $R_1 = L_0 \oplus F(R_0, K_1)$ \\
+  	$i = 2:$ & $L_2 = R_1$ \\
+  	            &  $R_2 = L_1 \oplus F(R_1, K_2)$ \\
+  	  & \vdots \\
+  	 $i = n:$ & $ L_n = R_{n-1} $ \\
+  	            &  $ R_n = L_{n-1} \oplus F( R_{n-1}, K_n ) $ \\
+	\end{tabular}
+\end{enumerate}
+
+\subsection*{decrypt:}
+\begin{enumerate}
+  \item Teile Cyphertext-Block $C$ in $L_n$ und $R_n$ auf (wobei $Länge(L_n) = Länge(R_n)$)
+$$ C = L_n \circ R_n $$
+  \item für die Iterationen $i$ gilt:
+
+  \begin{tabular}{rl}
+  	$i:$ &  $ R_{i-1} = L_i $ \\
+  	            & $ L_{i-1} = R_{i} \oplus F( L_{i}, K_i ) $ \\ \hline
+  	$i = n:$ &  $ R_{n-1} = L_n $ \\
+  	            & $ L_{n-1} = R_{n} \oplus F( L_{n}, K_n ) $ \\
+  	  & \vdots \\
+  	$i = 1:$ &  $ R_{1} = L_2 $ \\
+  	            & $ L_{1} = R_{2} \oplus F( L_{2}, K_2 ) $ \\
+  	$i = 0:$ &  $ R_{0} = L_1 $ \\
+  	            & $ L_{0} = R_{1} \oplus F( L_{1}, K_1 ) $ \\
+	\end{tabular}
+\end{enumerate}
+
+funktioniert für jedes F. Verfahren ist nur sicher mit bestimmten F.
+
+\section{Data Encryption Standard (DES) (3.4)}
+\begin{itemize}
+  \item Blocklänge: 64bit
+  \item Runden: 16
+  \item Sclüssellänge: 64bit, davon 8 Paritybits, also effektive Schlüssellänge 56bit
+  \item Sicherheit durch S-Boxen (Substitutionsboxen) für $F$ als Rundenfunktion
+  \item TripleDES: 3 fache Anwendung von DES \\
+  	$2 K$: 112bit: $C=E(K_1,D(K_2,E(K_1,P)))$ \\
+    $3 K$: 112bit: $C=E(K_1,D(K_2,E(K_3,P)))$ \\  
+\end{itemize}
+
+\section{Advanced Encryption Standard (AES) (3.5)}
+\begin{itemize}
+  \item Blocklänge: 128bit
+	\item Runden: 10 bei 128bit; 12 bei 192bit; 14 bei 256bit
+  \item Schlüssellänge: 128bit, 192bit oder 256bit
+  \item Geringer Implementierungsaufwand in HW und SW
+  \item einfaches Algorithmen-Design
+  \item lizenzkostenfrei
+\end{itemize}
+
+
+
+
+
+
+
+
+

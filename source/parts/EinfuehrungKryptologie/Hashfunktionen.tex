@@ -1,0 +1,81 @@
+\chapter{Hashfunktionen}
+\section{Anwendungen (4.1)}
+\begin{itemize}
+  \item Integritätscheck
+  \item sichere Komprimierung von z.B. digitalen Signaturen
+\end{itemize}
+
+\section{Einwegfunktion (4.2)}
+Für Einwegfunktion $F: X \mapsto Y$ gilt:
+\begin{itemize}
+  \item $\forall_{x \in X} : F(x) \textnormal{ leicht berechenbar}$
+  \item $\forall_{y \in Y}$: es ist praktisch unmöglich ein Urbild $x \in X$ zu berechnen für das $F(x) = y $ ist.
+\end{itemize}
+
+\section{Hashfunktionen (4.3)}
+Für Hashfunktion $H: \{0,1\}^* \mapsto \{0,1\}^n$
+\begin{itemize}
+  \item H ist Einwegfunktion
+  \item Sei $x \in \{0,1\}^*$ . Es ist praktisch unmöglich ein $z \neq x$ zu berechnen, sodass $H(z) = H(x)$ gilt.
+  \item Kollisionsresistenz: praktisch unmöglich frei wählbares Paar $(x,z)$ zu berechnen, sodass $H(x) = H(z)$.
+\end{itemize}
+Ohne die letzte Bedingung wird die Funktion schwache Hashfunktion genannt.
+
+Umgangssprachlich: Hashfunktion ist eine kryptografisch sichere, nicht umkehrbare Komprimierungsfunktion.
+
+\section{Bekannte Hashfunktionen (4.4)}
+\begin{itemize}
+  \item MD2, MD4, MD5: 128bit
+  \item SHA-1: 160bit
+  \item SHA-2: 224bit, 256bit, 384bit, 512bit
+  \item SHA-3: 224bit bis 512bit
+\end{itemize}
+
+(4.5) SHA-1 im Detail VL2 S.12
+
+\section{Merkle-Damgard Konstruktion von Hashfunktionen (4.6)}
+Gegeben: Einwegfunktion $F: \{0,1\}^{m+n} \mapsto \{0,1\}^n$ und Initialisierungsvektor $H_0$\\
+Konstruiere $F: \{0,1\}^{*} \mapsto \{0,1\}^n$
+\begin{enumerate}
+  \item Erweitere $P$, sodass $Länge(P)$ ein Vielfaches von $m$ ist. Das Ergebnis sei $P_m$.
+  \item Teile $P_m$ in Blöcke $p_1, p_2, \ldots, p_k$ mit der Länge $m$.
+  \item Berechne $H(P_m)$ mit Iterationen über die Blöcke aus 2. und der Funktion $F$ wie folgt:
+  	\begin{align*}
+  		H_i &= F(y_1 \circ H_0) \\
+  		H_2 &= F(y_2 \circ H_1) \\
+  		& \vdots \\
+  		H_k &= F(y_k \circ H_{k-1}) = H(P_m) \\
+		\end{align*} 
+\end{enumerate}
+
+\section{Birthday Paradox (4.7)}
+Wahrscheinlichkeit P(z,N), dass mit z vielen unabhängigen Zügen aus Wertemenge \mathbb{N} ein Wert doppelt vorkommt, ist ab $z = 1,17 \cdot \sqrt{N}$ größer als $\frac{1}{2}$. 
+
+Beispiel: Wahrscheinlichkeit dass zwei Menschen am gleichen Tag Geburtstag haben ist ab 23 Menschen größer als $\frac{1}{2}$.
+
+\section{Anwendung des Birthday Paradox auf Hashfunktionen (4.8)}
+\label{bDayHash}
+Gesucht ist eine beliebige Kollision.\\
+Algorithmus:
+\begin{enumerate}
+  \item Wähle zufällig ein bisher noch nicht betrachtetes $x_i$.
+  \item Vergleiche $H(x_i)$ mit allen anderen bisher betrachteten $H(x_j)$.
+  \item Wenn keine Kollision gefunden wurde, beginne wieder bei 1.
+\end{enumerate} 
+$H(x_i) = H(x_j)$ ergibt sich im mittel nach $ 1.17 \sqrt{2^n} $ Iterationen.
+
+\section{Angriffe auf Hashfunktionen (4.9)}
+\begin{itemize}
+  \item Kollisionsangriff: Schnellerer Algorithmus spezifisch zur Hashfunktion als in \ref{bDayHash} zu finden?
+  \item Brute-Force- und Wörterbuch-Angriff: Systematisches  Ausprobieren möglicher Eingaben und speicherung der Hashwerte in einer Lookup-Table.
+  \item Time-/Memory-Tradeoff: Bilde Ketten von möglichen Eingaben. In der Rainbow-Table werden nur Start und Endwert der Kette gespeichert. Um Hashwert zu knacken müssen Teile der Kette durchlaufen werden.
+\end{itemize}
+
+ 
+
+
+
+
+
+
+

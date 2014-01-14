@@ -1,0 +1,56 @@
+\chapter{Nachrichtenauthentisierung (8)}
+Es wird unterschieden:
+\begin{itemize}
+  \item Integrität: Nachweis, dass empfangene Nachricht gleich der ursprünglich gesendeten Nachricht ist. Wird mittels kryptografischer Prüfsummen realisiert ("`Message Authentication Codes"' krzl. MAC).
+  \item Senderauthentizität: digitale Unterschrift (Digitale Signaturen mittels asymmetrischer Kryptoverfahren)
+\end{itemize}
+
+\section{Kryptografische Prüfsummen (MAC) (8.1)}
+\begin{itemize}
+  \item $mac$ Funktion berechnet kryptografische Prüfsumme einer Nachricht $M$ mit Schlüssel $K$. 
+  	$$ mac: \{0,1\}^k \times \{0,1\}^* \mapsto \{0,1\}^n $$
+	\item Sender sendet Nachricht $M$ und $mac(K,M)$.
+	\item Empfänger weiß nach Prüfung des MAC, dass Nachricht unverändert ist und vom angegebenen Sender stammt.
+	\item Sicherheitsanforderungen
+	\begin{itemize}
+  	\item Ohne Kenntnis von $K$ soll es praktisch niemandem möglich sein, für eine Nachricht M eine gültige Prüfsumme zu berechenen. 
+  	\item Bei gegebener Nachricht $M$ und Prüfsumme $mac(K,M)$ darf es einem Angreifer praktisch weder möglich sein $K$ zu berechnen noch eine weitere Nachricht $M'$ mit identischer Prüfsumme zu finden. 
+	\end{itemize}
+\end{itemize}
+
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width = 0.8\textwidth]{MsgAuthCodes.pdf}
+	\caption{symmetric message authentication codes}
+\end{figure}
+
+
+\subsection* {Abgrenzung zu Fehler erkennenden Codes}
+Fehler erkennende Codes dienen dazu zufällige Übertragungsfehler zu erkennen. Sie schützen nicht vor Manipulation, da gültige Codes zu gegebener Nachricht leicht neu berechnet werden können. Fehler erkennende Codes dienen also ausschließlich der Safety und \emph{nicht} der Security.
+
+\section{Verfahren zur MAC Berechnung}
+\subsection{Blockchiffren im CBC Modus}
+Da der letzte Chiffretextblock $C_n$ bei der CBC-Verschlüsselung von allen Klartextblöcken abhängt, kann dieser zur Integritätsprüfung und Authentisierung verwendet werden. Protokollablauf CBC-MAC:
+\begin{enumerate}
+  \item Sender sendet Nachricht $M$ und als MAC den letzten Chriffretextblock $C_n$ der CBC Verschlüsselung von $M$ mit $E_K$.
+  \item Empfänger berechnet selbst $C_n'$ mittels CBC Verschlüsselung von empfangener Nachricht $M'$ mit $E_K$. Ist $C_n' = C_n$ so ist davon auszugehen, dass die Nachricht unverfälscht und vom angegebenen Empfänger übertragen wurde. (Da nur Empfänger und Sender den Schlüssel $K$ zur Verschlüsselung kennen). 
+\end{enumerate}
+
+\subsection{Einsatz von Hashfunktionen}
+Protokollablauf:
+\begin{enumerate}
+  \item Sender sendet Die Nachricht M und als MAC $mac_M = hash(concatenate(K, M))$
+  \item Empfänger empfängt Nachricht $M'$ und berechnet $mac_M' = hash(concatenate(K, M'))$. Akzeptiert wenn $mac_M' = mac_M$ .
+\end{enumerate}
+Verfahren ist grundsätzlich sicher, weist allerdings bei üblichen Hashfunktionen Schwächen auf.
+
+\subsubsection*{Hashed MAC Standard (HMAC)}
+MAC Funktion mit Paddings $p_1$ und $p_2$ um Schlüssel $K$ auf Länge eines Blocks der Hashfunktion aufzufüllen.
+  	$$hmac(K,M) = hash((K \oplus p_1) \mid hash(K \oplus p_2 \mid M))$$
+(in Standard RFC 2104 definiert)
+
+\section{Verbleibende Schwachstellen symmetrischer Verfahren (8.4)}
+\begin{itemize}
+  \item Bisher betrachtete Nachrichtenauthentisierungen schützen nicht vor Replay-Angriffen. Falls Schutz erforderlich: Einbinden eines Zeitstempels in die Nachricht.
+  \item Der Sender kann behaupten für eine Nachricht mit korrekter Prüfsumme, diese nicht gesendet zu haben. (Der Empfänger kann zu jeder beliebigen Nachricht einen gültigen MAC erzeugen.) 
+\end{itemize}

@@ -1,0 +1,26 @@
+\chapter{Hybride Verschlüsselung (7)}
+\section{Vergleich von asymmetrischen und symmetrischen Verfahren}
+\begin{itemize}
+  \item \emph{Schlüsselaustausch}: Symmetrische Kryptosysteme erfordern einen vertraulichen Schlüsselaustausch. Bei Asymmetrischen Verfahren ist dies nicht notwendig.
+  \item \emph{Schlüsselanzahl im Netzwerk}: Symmetrische Kryptosysteme benötigen für jedes Kommunikationspaar einen eigenen geheimen Schlüssel (bei n Kommunikationspartnern n(n-1)/2 viele Schlüssel). Bei asymmetrischen Systemen hat jeder Teilnehmer einen öffentlichen und einen privaten Schlüssel (2n viele Schlüssel).
+  \item \emph{Performanz}: Asymmetrische Verfahren arbeiten mit komplexen mathematischen Operationen und die Berechnung zur Ver- bzw. Entschlüsselung ist im Vergleich zu symmetrischen Verfahren sehr langsam.
+\end{itemize}
+
+\section{Definition Hybride Verschlüsselung (7.2)}
+Kombination symmetrischer und asymmetrischer Kryptosysteme:
+\begin{itemize}
+  \item Nutzung eines asymmetrischen Kryptosystems zum geheimen Schlüsselaustausch eines symmetrischen \emph{Session Keys}.
+  \item Nutzung eines symmetrischen Kryptosystems zur Verschlüsselung der Nachricht mit dem \emph{Session Key}.
+\end{itemize}
+\subsection*{Ablauf:}
+\begin{enumerate}
+  \item Sender wählt (pseudo-)zufällig einen Session Key $K$.
+  \item Sender verschlüsselt $K$ asymmetrisch mit dem Public Key $PK$ des Empfängers: $PE(PK, K)$
+  \item Sender sendet $PE(PK, K)$ an den Empfänger.
+  \item Sender und Empfänger können mit symmetrischem Verschlüsselungsverfahren über $K$ geschützt kommunizieren. 
+\end{enumerate}
+\begin{figure}[htp]
+	\centering
+	\includegraphics[width=.8\textwidth]{HybridCrypt.pdf}
+	\caption{Hybrid Crypto System}
+\end{figure}
