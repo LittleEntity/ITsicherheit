@@ -30,4 +30,19 @@ Dieses Verfahren ist kryptografisch sicher, solange der Secret Key $SK$ des Send
 	\caption{Signing of message $M$ with sender's secret key $SK$ and validation by receiver with sender's public key $PK$}
 \end{figure}
 
+\section{RSA \& Digitale Signaturen (9.3)}
+Wenn validate $true$ ist, ist die Validierung erfolgreich abgeschlossen. In der Praxis wird statt der gesamten Nachricht ein Hashwert der Nachricht zur Signierung verwendet.  
+\begin{align*}
+sig(M) &= (H(M))^d \hspace{4pt} (mod \hspace{4pt} n) \\
+validate(M) &= H(M) \hspace{4pt} (mod \hspace{4pt} n) \Leftrightarrow ((H(M))^d)^e \\   
+\end{align*}
+
+\section{Digital Signature Standard (9.4)}
+\emph{Abschnitt Klausurrelevant?}
+
+\section{Problem Digitaler Signaturen}
+Der Sender kann behaupten, dass sein privater Schlüssel fremden zugänglich war. Lösung: Vereinbarung mit einer Public Key Infrastructure (PKI).
+
+\chapter{Krypto-Regulierung}
+\emph{Abschnitt Klausurrelevant?}
 
