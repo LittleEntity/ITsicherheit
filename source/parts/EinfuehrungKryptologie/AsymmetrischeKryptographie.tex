@@ -39,12 +39,12 @@ Aus Erfahrung wird gesagt, dass das Lösen von Diskreten-Algorithmen-Gleichungen
 Die Äquivalenz zum Faktorisierungsproblem kann bewiesen werden."'
 
 \subsection{Überblick über ausgewählte Asymmetrische Verfahren (5.3.4)}
-\begin{tabular}{*{5}{l}}
-Verfahren & schweres Problem / Falltür & leichtes Problem & Signatur möglich & Einsatz in der Praxis \\
-RSA & Faktorisierung mod n & Multiplizieren/Potenzieren mod n & ja & ja \\
-Rabin & Quadratwurzel ziehen mod n & Quadrieren mod n & nein & nein \\
-Elgamal & Diskreter Logarithmus mod n & Multiplizieren/Potenzieren mod n & ja & ja \\
-\end{tabular}
+\begin{tabularx}{\textwidth}{p{0.1\textwidth}p{0.23\textwidth}p{0.23\textwidth}p{0.2\textwidth}p{0.1\textwidth}}
+Verfahren & schweres Problem / Falltür & leichtes Problem & Signatur möglich & Einsatz in der Praxis \\ \hline
+RSA & Faktorisierung mod n & Multiplizieren / Potenzieren mod n & ja & ja \\ \hline
+Rabin & Quadratwurzel ziehen mod n & Quadrieren mod n & nein & nein \\ \hline
+Elgamal & Diskreter Logarithmus mod n & Multiplizieren / Potenzieren mod n & ja & ja \\
+\end{tabularx}
 
 \section{Mathematische Vorbereitung für RSA (5.4)}
 \subsection{Division mit Rest}
@@ -55,7 +55,7 @@ $$
  \textnormal{Modul } m \in \mathbb{N}
 $$
 $$
-z = qb + r \textnormal{ mit } qb = \lfloor z : m \rfloor \textnormal{ und } r = z - qb = z \hspace{4pt} mod \hspace{4pt} m 
+z = qm + r \textnormal{ mit } q = \lfloor z : m \rfloor \textnormal{ und } r = z - qm = z \hspace{4pt} (mod \hspace{3pt} m) 
 $$
 
 \subsection{Modulares Rechnen}
@@ -91,10 +91,6 @@ $$
 \end{array}
 $$
 
-\subsection{Multiplikatives Inverses (5.4.4)}
-Das Multiplikatives Inverse $z^{-1}$ zu $z$ ist definiert über:
-$$z \cdot z^{-1} = 1 \hspace{4pt} (mod \hspace{4pt} m) $$
-
 \subsection{Definition: Primzahl (5.4.5)}
 $p$ ist Primzahl, wenn $p$ außer sich selbst und 1 keine positiven Teiler hat.
 
@@ -102,11 +98,18 @@ $p$ ist Primzahl, wenn $p$ außer sich selbst und 1 keine positiven Teiler hat.
 Der ggT zweier Zahlen ist die größte Zahl, welche beide Zahlen ohne Rest teilt. \\
 Falls $ggT(a,b) = 1$, so heißen a und b teilerfremd.
 
+\subsection{Multiplikatives Inverses (5.4.4)}
+Das Multiplikatives Inverse $z^{-1}$ zu $z$ ist definiert über:
+$$z \cdot z^{-1} = 1 \hspace{4pt} (mod \hspace{4pt} m) $$
+
 \subsection{Erweiterter Euklidischer Algorithmus zur Bestimmung des Multiplikativen Inversen (5.4.7)}
-Wenn eine Zahl $z$ zum Modul $m$ teilerfremd ist, lässt sich ihr Multiplikatives Inverses $z^{-1}$ mit dem Erweiterten Euklidischen Algorithmus bestimmen.\footnote{genaue Erläuterung: "`http://www.yimin-ge.com/doc/multiplikative\_inverse.pdf"'} Der Algorithmus liefert auch Aufschluss über die Teilerfremdheit.
+Wenn eine Zahl $z$ zum Modul $m$ teilerfremd ist, lässt sich ihr Multiplikatives Inverses $z^{-1}$ mit dem Erweiterten Euklidischen Algorithmus bestimmen.\footnote{genaue Erläuterung: \url{http://www.yimin-ge.com/doc/multiplikative\_inverse.pdf}} Der Algorithmus liefert auch Aufschluss über die Teilerfremdheit.
 \begin{enumerate}
-  \item starte mit erster Gleichung der Form $m = 1 \cdot m + 0 \cdot z$ und nachfolgender Gleichung der Form $z = 0 \cdot m + 1 \cdot z$
-  \item Bilde die Folgegleichungen indem von der vorletzten Gleichung ein vielfaches der letzten Gleichung subtrahiert wird, sodass das Ergebnis der linken Seite dem Rest der Division mit Rest entspricht.
+  \item starte mit erster Gleichung der Form 
+  $$m = 1 \cdot m + 0 \cdot z$$
+  und nachfolgender Gleichung der Form 
+  $$z = 0 \cdot m + 1 \cdot z$$
+  \item Bilde die Folgegleichungen, indem von der vorletzten Gleichung ein vielfaches der letzten Gleichung subtrahiert wird, sodass das Ergebnis der linken Seite dem Rest der Division mit Rest entspricht.
   \item Wiederhole 2. solange bis das Ergebnis der linken Seite 1 oder 0 ist.
   \begin{itemize}
     \item Wenn 1: Das Multiplikative Inverse $z^{-1}$ ist der Faktor vor $z$ .
@@ -168,19 +171,6 @@ Geheimer Schlüssel ist Tripel $(p,q,d)$.
 
 Hinweis: Die Berechnung von $d$ erolgt $mod \hspace{4pt} \varphi(n)$.
 
-\subsection{RSA-Verschlüsselung und Entschlüsselung}
-Encryption of Plaintext $P$ with $0 \le P < n$:
-$$ C = (P^e) \hspace{4pt} (mod \hspace{4pt} n)  $$
-
-Decryption of Cyphertext $C$:
-$$ P = (C^d) \hspace{4pt} (mod \hspace{4pt} n)  $$
-
-RSA Schlüsselänge ist Anzahl Bits des Moduls $n$.
-
-$ P \mapsto P^e \hspace{4pt} (mod \hspace{4pt} n) $ ist eine Falltürfunktion da:
-Ohne geheimem Schlüssel ist die Funktion praktisch nicht invertierbar. \\
-Mit Kenntnis des geheimen Schlüssel ist die Invertierung einfach.
-
 \subsection{Falltürfunktion (trap door function)}
  Für ein Geheimnis $S$ ist Funktion $F_S: X \mapsto Y$ eine Falltürfunktion, wenn gilt:
  \begin{enumerate}
@@ -189,10 +179,25 @@ Mit Kenntnis des geheimen Schlüssel ist die Invertierung einfach.
   \item Mit Kenntnis des Geheimnisses $S$ ist es für gegebenes $y \in Y$ leicht ein Urbild $x$ von $y$ unter $F_S$ zu berechnen. 
 \end{enumerate}
 
+\subsection{RSA-Verschlüsselung und Entschlüsselung}
+Encryption of Plaintext $P$ with $0 \le P < m$:
+$$ C = (P^e) \hspace{4pt} (mod \hspace{4pt} m)  $$
+
+Decryption of Cyphertext $C$:
+$$ P = (C^d) \hspace{4pt} (mod \hspace{4pt} m)  $$
+
+RSA Schlüsselänge ist Anzahl Bits des Moduls $m$.
+
+$ P \mapsto P^e \hspace{4pt} (mod \hspace{4pt} m) $ ist eine Falltürfunktion da:
+\begin{itemize}
+  \item Ohne geheimem Schlüssel ist die Funktion praktisch nicht invertierbar.
+  \item Mit Kenntnis des geheimen Schlüssel ist die Invertierung einfach.
+\end{itemize}
+
 \subsection{Sicherheit des RSA}
 \begin{itemize}
   \item Aufwand um geheimen Exponenten aus öffentlichem Schlüssel zu berechnen ist äquivalent zur Faktorisierung des RSA-Moduls
-  \item Bislang unbekannt RSA brechbar ohne Modul zu faktorisieren oder geheimen Exponenten $d$ zu finden.
+  \item Bislang unbekannt ob RSA brechbar ohne Modul zu faktorisieren oder geheimen Exponenten $d$ zu finden.
   \item Der Aufwand zur Faktorisierung des \textsc{rsa}-Moduls hängt von dessen Größe ab.
 \end{itemize}
 
